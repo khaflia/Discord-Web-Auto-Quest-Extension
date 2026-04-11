@@ -96,10 +96,10 @@
 
           if (isVideo) {
             await processVideoStep(state, stores.api);
-            if (!state.completed) await new Promise(r => setTimeout(r, 1000));
+            if (!state.completed) await new Promise(r => setTimeout(r, 1000 + (Math.random() * 500)));
           } else {
             await processHeartbeatStep(state, stores);
-            if (!state.completed) await new Promise(r => setTimeout(r, 30000));
+            if (!state.completed) await new Promise(r => setTimeout(r, 20000 + (Math.random() * 2000)));
           }
         }
       }
@@ -160,12 +160,9 @@
   };
 
   async function processVideoStep(state, api) {
-    const { quest, secondsNeeded, enrolledAt, currentProgress } = state;
-    const maxFuture = 10, speed = 7;
+    const { quest, secondsNeeded, currentProgress } = state;
+    const speed = 1;
     
-    const maxAllowed = Math.floor((Date.now() - enrolledAt) / 1000) + maxFuture;
-    if (maxAllowed - currentProgress < speed) return;
-
     const nextTime = Math.min(secondsNeeded, currentProgress + speed + Math.random());
     
     try {

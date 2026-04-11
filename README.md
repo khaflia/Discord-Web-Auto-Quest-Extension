@@ -10,6 +10,14 @@ Original Source from [**aamiaa**](https://gist.github.com/aamiaa/204cd9d42013ded
 > [!NOTE]
 > Join Discord ID Server Support: https://discord.gg/HbZEEuj4KJ
 
+> [!CAUTION]
+> As of April 7th 2026, Discord has expressed their intent to crack down on automating quest completion.
+> Some users have received the following system message:
+> 
+> <img width="836" height="272" alt="image" src="https://i.postimg.cc/1XqDrjc1/quest.webp" />
+> 
+> Use the script at your own risk.
+
 ## What it does
 
 This extension hooks into Discord's quest system and automatically completes the requirements for all active quests sequentially. It works with:
