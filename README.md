@@ -1,4 +1,5 @@
 <img width=100% src="./assets/banner.png" alt="header"/> 
+
 # Discord Web Auto Quest Extension
 
 <img align="right" src="./assets/icon.png" width=200 alt="Discord Auto Quest Extension logo">
