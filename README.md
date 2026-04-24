@@ -19,7 +19,9 @@ Original Source from [**aamiaa**](https://gist.github.com/aamiaa/204cd9d42013ded
 > Use the script at your own risk.
 
 > [!IMPORTANT]
-> 24/04/2026 Use the latest version (v1.2.6) on the Discord Canary site: canary.discord.com/quest-home. It may work on discord.com later, but for now, use Canary Website Version.
+> **24/04/2026** 
+> Use the latest version **(v1.2.6)** on the Discord Canary site: https://canary.discord.com/quest-home.
+> It may work on discord.com later, but for now, use Canary Website Version.
 
 ## What it does
 
