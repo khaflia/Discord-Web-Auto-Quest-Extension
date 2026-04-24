@@ -1,3 +1,4 @@
+<img width=100% src="./assets/banner.png" alt="header"/> 
 # Discord Web Auto Quest Extension
 
 <img align="right" src="./assets/icon.png" width=200 alt="Discord Auto Quest Extension logo">
@@ -10,6 +11,11 @@ Original Source from [**aamiaa**](https://gist.github.com/aamiaa/204cd9d42013ded
 > [!NOTE]
 > Join Discord ID Server Support: https://discord.gg/HbZEEuj4KJ
 
+> [!IMPORTANT]
+> **24/04/2026** 
+> Use the latest version **(v1.2.6)** on the Discord Canary site: https://canary.discord.com/quest-home.
+> It may work on discord.com later, but for now, use Canary Website Version.
+
 > [!CAUTION]
 > As of April 7th 2026, Discord has expressed their intent to crack down on automating quest completion.
 > Some users have received the following system message:
@@ -17,11 +23,6 @@ Original Source from [**aamiaa**](https://gist.github.com/aamiaa/204cd9d42013ded
 > <img width="836" height="272" alt="image" src="https://i.postimg.cc/1XqDrjc1/quest.webp" />
 > 
 > Use the script at your own risk.
-
-> [!IMPORTANT]
-> **24/04/2026** 
-> Use the latest version **(v1.2.6)** on the Discord Canary site: https://canary.discord.com/quest-home.
-> It may work on discord.com later, but for now, use Canary Website Version.
 
 ## What it does
 
