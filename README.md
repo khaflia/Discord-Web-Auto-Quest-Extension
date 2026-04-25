@@ -13,9 +13,8 @@ Original Source from [**aamiaa**](https://gist.github.com/aamiaa/204cd9d42013ded
 > Join Discord ID Server Support: https://discord.gg/HbZEEuj4KJ
 
 > [!IMPORTANT]
-> **24/04/2026** 
-> Use the latest version **(v1.2.6)** on the Discord Canary site: https://canary.discord.com/quest-home.
-> It may work on discord.com later, but for now, use Canary Website Version.
+> **25/04/2026** 
+> Extension is now working normally. Thanks you~ 💝
 
 > [!CAUTION]
 > As of April 7th 2026, Discord has expressed their intent to crack down on automating quest completion.
