@@ -93,11 +93,6 @@
   };
 
   function createQuestButton() {
-    if (!window.location.pathname.includes('/quest-home')) {
-      removeElements();
-      return;
-    }
-    
     if (document.getElementById('DiscordQuestButton')) {return;}
 
     const button = document.createElement('div');
@@ -105,10 +100,10 @@
     button.className = 'questify-extension-button';
     button.style.cssText = STYLES.button;
 
-    const icon = document.createElement('img');
-    icon.src = chrome.runtime.getURL('assets/icon.png');
-    icon.alt = 'Quest Icon';
-    icon.style.cssText = STYLES.icon;
+    const icon = document.createElement('span');
+    icon.textContent = '⚡';
+    icon.setAttribute('aria-hidden', 'true');
+    icon.style.cssText = STYLES.icon + ' display:flex;align-items:center;justify-content:center;font-size:14px;';
     button.appendChild(icon);
 
     const textLabel = document.createElement('span');
@@ -117,9 +112,9 @@
     button.appendChild(textLabel);
 
     const expandButton = document.createElement('button');
-    const arrowIcon = document.createElement('img');
-    arrowIcon.src = chrome.runtime.getURL('assets/icon.png');
-    arrowIcon.style.cssText = 'width: 10px; height: 10px; display: block; pointer-events: none;';
+    const arrowIcon = document.createElement('span');
+    arrowIcon.textContent = '▾';
+    arrowIcon.style.cssText = 'font-size: 11px; line-height: 1; display: block; pointer-events: none;';
     expandButton.appendChild(arrowIcon);
     expandButton.style.cssText = STYLES.expandButton + ' padding: 4px; display: flex; align-items: center; justify-content: center;';
     expandButton.addEventListener('click', (e) => {
