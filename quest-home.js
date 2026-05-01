@@ -107,7 +107,7 @@
     button.appendChild(icon);
 
     const textLabel = document.createElement('span');
-    textLabel.textContent = 'Running Quests';
+    textLabel.textContent = 'Questify (Enabled)';
     textLabel.style.cssText = STYLES.text;
     button.appendChild(textLabel);
 
@@ -141,10 +141,21 @@
     if (isPanelExpanded) {
       createExpandedPanel();
     }
+
+    if (window.location.pathname.includes('/quest-home')) {
+      setTimeout(() => {
+        handleButtonClick(button, textLabel, icon, expandButton);
+      }, 1200);
+    }
   }
 
   function handleButtonClick(button, textLabel, icon, expandButton) {
     const elements = { button, textLabel, icon, expandButton };
+
+    if (!window.location.pathname.includes('/quest-home')) {
+      window.location.href = 'https://discord.com/quest-home';
+      return;
+    }
 
     if (typeof chrome === 'undefined' || !chrome.runtime) {
       updateButtonState(elements, { message: 'Extension Error', bgColor: '#ff4444', textColor: 'white', invertIcons: true });
@@ -177,7 +188,7 @@
     }
 
     setTimeout(() => {
-      textLabel.textContent = 'Running Quests';
+      textLabel.textContent = 'Questify (Enabled)';
       button.style.background = 'rgba(255, 255, 255, 0.18)';
       button.style.color = '#f7f9ff';
       icon.style.filter = '';
