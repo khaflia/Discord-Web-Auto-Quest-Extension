@@ -114,7 +114,6 @@
 
   function getActiveQuests(QuestsStore) {
     const supportedTasks = ["WATCH_VIDEO", "PLAY_ON_DESKTOP", "STREAM_ON_DESKTOP", "PLAY_ACTIVITY", "WATCH_VIDEO_ON_MOBILE"];
-    const ORB_REWARD_TYPE = 4;
 
     return [...QuestsStore.quests.values()].filter(quest => {
       const isExpired = new Date(quest.config.expiresAt).getTime() <= Date.now();
@@ -122,10 +121,8 @@
       const isEnrolled = !!quest.userStatus?.enrolledAt;
       const taskConfig = quest.config.taskConfig ?? quest.config.taskConfigV2;
       const hasSupportedTask = supportedTasks.some(type => taskConfig.tasks[type] !== null);
-      const rewards = quest.config?.rewardsConfig?.rewards ?? [];
-      const hasOrbReward = rewards.some(r => r?.type === ORB_REWARD_TYPE || r?.orbQuantity > 0);
-
-      return isEnrolled && !isCompleted && !isExpired && hasSupportedTask && hasOrbReward;
+      
+      return isEnrolled && !isCompleted && !isExpired && hasSupportedTask;
     });
   }
 
