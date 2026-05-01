@@ -7,139 +7,81 @@
 
   const STYLES = {
     button: `
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 10000;
-      background: white;
-      color: black;
-      border: none;
-      border-radius: 10px;
-      padding: 8px 16px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       display: flex;
       align-items: center;
-      gap: 4px;
-      font-size: 14px;
-      font-weight: 600;
-      width: 180px;
+      justify-content: center;
+      opacity: 0.8;
+      transition: opacity 150ms;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     `,
-    icon: `
-      width: 15px;
-      height: 15px;
-    `,
-    text: `
-      flex: 1;
-      text-align: center;
-    `,
-    expandButton: `
-      background: rgba(218, 218, 218, 0.1);
-      border: 1px solid #eeededff;
-      border-radius: 4px;
-      color: black;
-      cursor: pointer;
-      font-size: 12px;
-      padding: 2px 7px;
-      margin-left: 4px;
-      transition: transform 0.3s ease;
-      transform: rotate(0deg);
+    icon: `width: 20px; height: 20px; pointer-events: none; border-radius: 50%;`,
+    modalOverlay: `
+      position: fixed; inset: 0; background: rgba(0,0,0,0.35);
+      z-index: 10001; display: flex; align-items: center; justify-content: center;
     `,
     panel: `
-      position: fixed;
-      bottom: 65px;
-      right: 20px;
-      z-index: 9999;
-      background: black;
-      color: white;
-      border-radius: 10px;
-      padding: 16px;
-      width: 250px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      width: 360px; max-height: 70vh; overflow: auto;
+      background: linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.08));
+      color: #f4f7ff; border: 1px solid rgba(255,255,255,0.25); border-radius: 16px;
+      padding: 16px; box-shadow: 0 16px 48px rgba(0,0,0,0.42);
+      backdrop-filter: blur(20px) saturate(145%); -webkit-backdrop-filter: blur(20px) saturate(145%);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     `,
-    questList: `
-      margin-bottom: 5px;
-      max-height: 200px;
-      overflow-y: auto;
-    `,
-    questItem: `
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      font-size: 13px;
-    `,
-    questName: `
-      flex: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-right: 8px;
-      color: #eee;
-    `,
-    questProgress: `
-      font-family: monospace;
-      color: #aaa;
-      font-size: 12px;
-    `
+    questList: `margin-bottom: 8px; max-height: 260px; overflow-y: auto;`,
+    questItem: `display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px;`,
+    questName: `flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:8px;color:#f0f5ff;`,
+    questProgress: `font-family:monospace;color:#d2dbff;font-size:12px;`
   };
+
+  function attachButtonToTopBar(button) {
+    const selectors = [
+      '[class*="toolbar"]',
+      '[aria-label="Help"]',
+      '[data-list-id="chat-input"]'
+    ];
+    for (const s of selectors) {
+      const host = document.querySelector(s);
+      if (!host) continue;
+      if (s === '[aria-label="Help"]' && host.parentElement) {
+        host.parentElement.insertBefore(button, host);
+      } else {
+        host.appendChild(button);
+      }
+      return true;
+    }
+    return false;
+  }
 
   function createQuestButton() {
     if (!window.location.pathname.includes('/quest-home')) {
       removeElements();
       return;
     }
-    
-    if (document.getElementById('DiscordQuestButton')) {return;}
-
+    if (document.getElementById('DiscordQuestButton')) return;
     const button = document.createElement('div');
     button.id = 'DiscordQuestButton';
+    button.title = 'Open Nexo Quest Assistant';
     button.style.cssText = STYLES.button;
 
     const icon = document.createElement('img');
     icon.src = 'https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/66e3d8014ea898f3a4b2156c_Symbol.svg';
-    icon.alt = 'Quest Icon';
+    icon.alt = 'Quest';
     icon.style.cssText = STYLES.icon;
     button.appendChild(icon);
 
-    const textLabel = document.createElement('span');
-    textLabel.textContent = 'Running Quests';
-    textLabel.style.cssText = STYLES.text;
-    button.appendChild(textLabel);
+    button.addEventListener('mouseenter', () => { button.style.opacity = '1'; });
+    button.addEventListener('mouseleave', () => { button.style.opacity = '0.8'; });
+    button.addEventListener('click', () => handleButtonClick(button, null, icon, null));
+    button.addEventListener('contextmenu', (e) => { e.preventDefault(); togglePanel(); });
 
-    const expandButton = document.createElement('button');
-    const arrowIcon = document.createElement('img');
-    arrowIcon.src = 'https://pic.onlinewebfonts.com/thumbnails/icons_378683.svg';
-    arrowIcon.style.cssText = 'width: 10px; height: 10px; display: block; pointer-events: none;';
-    expandButton.appendChild(arrowIcon);
-    expandButton.style.cssText = STYLES.expandButton + ' padding: 4px; display: flex; align-items: center; justify-content: center;';
-    expandButton.addEventListener('click', (e) => {
-      e.stopPropagation();
-      togglePanel();
-    });
-    button.appendChild(expandButton);
-    expandButtonReference = expandButton;
-
-    button.addEventListener('mouseenter', () => {
-      button.style.transform = 'translateY(-2px)';
-      button.style.boxShadow = '0 6px 16px rgba(0,0,0,0.2)';
-    });
-
-    button.addEventListener('mouseleave', () => {
-      button.style.transform = 'translateY(0)';
-      button.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-    });
-
-    button.addEventListener('click', () => handleButtonClick(button, textLabel, icon, expandButton));
-
-    document.body.appendChild(button);
-
-    if (isPanelExpanded) {
-      createExpandedPanel();
-    }
+    if (!attachButtonToTopBar(button)) document.body.appendChild(button);
   }
 
   function handleButtonClick(button, textLabel, icon, expandButton) {
@@ -153,11 +95,11 @@
     chrome.runtime.sendMessage({ action: 'executeQuestCode' }, (response) => {
       if (chrome.runtime.lastError) {
         console.error('Discord Auto Quest Error:', chrome.runtime.lastError);
-        updateButtonState(elements, { message: 'Error', bgColor: 'black', textColor: 'white', invertIcons: true });
+        updateButtonState(elements, { message: 'Error', bgColor: 'rgba(255,74,74,0.45)', textColor: '#fff', invertIcons: false });
       } else if (response && response.success) {
-        updateButtonState(elements, { message: 'Code Executed', bgColor: 'black', textColor: 'white', invertIcons: true });
+        updateButtonState(elements, { message: 'Activated', bgColor: 'rgba(74,222,128,0.32)', textColor: '#fff', invertIcons: false });
       } else {
-        updateButtonState(elements, { message: 'Error', bgColor: 'black', textColor: 'white', invertIcons: true });
+        updateButtonState(elements, { message: 'Error', bgColor: 'rgba(255,74,74,0.45)', textColor: '#fff', invertIcons: false });
       }
     });
   }
@@ -166,26 +108,30 @@
     const { button, textLabel, icon, expandButton } = elements;
     const { message, bgColor, textColor, invertIcons } = state;
 
-    textLabel.textContent = message;
+    if (textLabel) textLabel.textContent = message;
     button.style.background = bgColor;
     button.style.color = textColor;
     
     if (invertIcons) {
       icon.style.filter = 'brightness(0) invert(1)';
-      expandButton.style.filter = 'brightness(0) invert(1)';
+      if (expandButton) expandButton.style.filter = 'brightness(0) invert(1)';
     }
 
     setTimeout(() => {
-      textLabel.textContent = 'Running Quests';
-      button.style.background = 'white';
-      button.style.color = 'black';
+      if (textLabel) textLabel.textContent = 'Running Quests';
+      button.style.background = 'rgba(255, 255, 255, 0.18)';
+      button.style.color = '#f7f9ff';
       icon.style.filter = '';
-      expandButton.style.filter = '';
+      if (expandButton) expandButton.style.filter = '';
     }, 2000);
   }
 
   function createExpandedPanel() {
-    if (document.getElementById('DiscordQuestPanel')) {return;}
+    if (document.getElementById('DiscordQuestModal')) {return;}
+    const overlay = document.createElement('div');
+    overlay.id = 'DiscordQuestModal';
+    overlay.style.cssText = STYLES.modalOverlay;
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) togglePanel(); });
 
     const panel = document.createElement('div');
     panel.id = 'DiscordQuestPanel';
@@ -194,24 +140,30 @@
     const questListContainer = document.createElement('div');
     questListContainer.id = 'DiscordQuestList';
     questListContainer.style.cssText = STYLES.questList;
-    
-    if (questStateCache.size > 0) {
-      questStateCache.forEach(quest => updateQuestItemUI(questListContainer, quest));
-    }
-    
+    if (questStateCache.size > 0) questStateCache.forEach(quest => updateQuestItemUI(questListContainer, quest));
     panel.appendChild(questListContainer);
 
     const title = document.createElement('h3');
-    title.textContent = 'Discord ID | Auto Quest';
-    title.style.cssText = 'margin: 0 0 12px 0; font-size: 16px; font-weight: bold; border-top: 1px solid #333; padding-top: 12px;';
+    title.textContent = 'Nexo Store | Quest Assistant';
+    title.style.cssText = 'margin:0 0 12px 0;font-size:16px;font-weight:700;';
     panel.appendChild(title);
 
+    const runBtn = document.createElement('button');
+    runBtn.textContent = 'Activate Quests';
+    runBtn.style.cssText = 'width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:rgba(74,222,128,.28);color:#fff;cursor:pointer;margin-bottom:10px;';
+    runBtn.onclick = () => {
+      const b = document.getElementById('DiscordQuestButton');
+      handleButtonClick(b, null, b?.querySelector('img'), null);
+    };
+    panel.appendChild(runBtn);
+
     const credit = document.createElement('p');
-    credit.style.cssText = 'margin: 0; font-size: 14px; color: #ccc;';
-    credit.innerHTML = 'Credits by <a href="https://github.com/nvckai/Discord-Web-Auto-Quest-Extension" target="_blank" style="color: #fff; font-weight: bold; text-decoration: none;">6Together9</a>';
+    credit.style.cssText = 'margin:0;font-size:13px;color:#d8deff;';
+    credit.innerHTML = 'Made by <strong>@kk5a - nexo store</strong>';
     panel.appendChild(credit);
 
-    document.body.appendChild(panel);
+    overlay.appendChild(panel);
+    document.body.appendChild(overlay);
   }
 
   window.addEventListener('message', ({ source, data }) => {
@@ -258,7 +210,7 @@
     const existingButton = document.getElementById('DiscordQuestButton');
     if (existingButton) {existingButton.remove();}
     
-    const existingPanel = document.getElementById('DiscordQuestPanel');
+    const existingPanel = document.getElementById('DiscordQuestModal');
     if (existingPanel) {existingPanel.remove();}
   }
 
@@ -271,7 +223,7 @@
     if (isPanelExpanded) {
       createExpandedPanel();
     } else {
-      const panel = document.getElementById('DiscordQuestPanel');
+      const panel = document.getElementById('DiscordQuestModal');
       if (panel) {panel.remove();}
     }
   }

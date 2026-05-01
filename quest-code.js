@@ -53,6 +53,22 @@
     return null;
   }
 
+
+  const QUESTIFY_VIDEO_LEEWAY_SECONDS = 24;
+
+  function getQuestTargetSeconds(taskType, taskData) {
+    const raw = taskData?.target ?? 0;
+    const isWatch = taskType === 'WATCH_VIDEO' || taskType === 'WATCH_VIDEO_ON_MOBILE';
+    const adjusted = Math.max(0, raw - (isWatch ? QUESTIFY_VIDEO_LEEWAY_SECONDS : 0));
+    return { raw, adjusted };
+  }
+
+  const QUESTIFY_COMPAT_PROFILE = {
+    name: 'questify-compat',
+    jitterMs: [900, 2200],
+    heartbeatMs: [18000, 24000]
+  };
+
   function sendUpdate(type, data) {
     window.postMessage({
       prefix: 'DISCORD_QUEST_COMPLETER',
@@ -96,10 +112,10 @@
 
           if (isVideo) {
             await processVideoStep(state, stores.api);
-            if (!state.completed) await new Promise(r => setTimeout(r, 1000 + (Math.random() * 500)));
+            if (!state.completed) await new Promise(r => setTimeout(r, QUESTIFY_COMPAT_PROFILE.jitterMs[0] + (Math.random() * (QUESTIFY_COMPAT_PROFILE.jitterMs[1]-QUESTIFY_COMPAT_PROFILE.jitterMs[0]))));
           } else {
             await processHeartbeatStep(state, stores);
-            if (!state.completed) await new Promise(r => setTimeout(r, 20000 + (Math.random() * 2000)));
+            if (!state.completed) await new Promise(r => setTimeout(r, QUESTIFY_COMPAT_PROFILE.heartbeatMs[0] + (Math.random() * (QUESTIFY_COMPAT_PROFILE.heartbeatMs[1]-QUESTIFY_COMPAT_PROFILE.heartbeatMs[0]))));
           }
         }
       }
@@ -126,7 +142,8 @@
     const taskType = supportedTasks.find(type => taskConfig.tasks[type] != null);
     
     const taskData = taskConfig.tasks[taskType];
-    const secondsNeeded = taskData?.target ?? 0;
+    const target = getQuestTargetSeconds(taskType, taskData);
+    const secondsNeeded = target.adjusted;
     const currentProgress = quest.userStatus?.progress?.[taskType]?.value ?? quest.userStatus?.streamProgressSeconds ?? 0;
 
     return {
@@ -160,13 +177,14 @@
   };
 
   async function processVideoStep(state, api) {
-    const { quest, secondsNeeded, currentProgress } = state;
-    const speed = 1;
-    
-    const nextTime = Math.min(secondsNeeded, currentProgress + speed + Math.random());
-    
+    const { quest, secondsNeeded } = state;
+    const minStep = 6;
+    const maxStep = 8;
+    const jitter = minStep + (Math.random() * (maxStep - minStep));
+    const nextTime = Math.min(secondsNeeded, state.currentProgress + jitter);
+
     try {
-      const res = await api.post({ url: `/quests/${quest.id}/video-progress`, body: { timestamp: nextTime } });
+      const res = await api.post({ url: `/quests/${quest.id}/video-progress`, body: { timestamp: Number(nextTime.toFixed(6)) } });
       state.currentProgress = nextTime;
       notifyUI(quest, Math.floor(state.currentProgress), secondsNeeded, false);
 
