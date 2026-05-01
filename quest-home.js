@@ -11,21 +11,23 @@
       bottom: 20px;
       right: 20px;
       z-index: 10000;
-      background: white;
-      color: black;
-      border: none;
-      border-radius: 10px;
-      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.18);
+      color: #f7f9ff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 16px;
+      padding: 10px 16px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.35);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
       transition: all 0.3s ease;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       font-size: 14px;
       font-weight: 600;
-      width: 180px;
+      width: 210px;
     `,
     icon: `
       width: 15px;
@@ -36,10 +38,10 @@
       text-align: center;
     `,
     expandButton: `
-      background: rgba(218, 218, 218, 0.1);
-      border: 1px solid #eeededff;
-      border-radius: 4px;
-      color: black;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.38);
+      border-radius: 8px;
+      color: #f7f9ff;
       cursor: pointer;
       font-size: 12px;
       padding: 2px 7px;
@@ -52,12 +54,15 @@
       bottom: 65px;
       right: 20px;
       z-index: 9999;
-      background: black;
-      color: white;
-      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.08));
+      color: #f4f7ff;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 16px;
       padding: 16px;
-      width: 250px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      width: 280px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.42);
+      backdrop-filter: blur(20px) saturate(145%);
+      -webkit-backdrop-filter: blur(20px) saturate(145%);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     `,
     questList: `
@@ -78,11 +83,11 @@
       overflow: hidden;
       text-overflow: ellipsis;
       margin-right: 8px;
-      color: #eee;
+      color: #f0f5ff;
     `,
     questProgress: `
       font-family: monospace;
-      color: #aaa;
+      color: #d2dbff;
       font-size: 12px;
     `
   };
@@ -125,12 +130,12 @@
 
     button.addEventListener('mouseenter', () => {
       button.style.transform = 'translateY(-2px)';
-      button.style.boxShadow = '0 6px 16px rgba(0,0,0,0.2)';
+      button.style.boxShadow = '0 18px 44px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.35)';
     });
 
     button.addEventListener('mouseleave', () => {
       button.style.transform = 'translateY(0)';
-      button.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+      button.style.boxShadow = '0 10px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.35)';
     });
 
     button.addEventListener('click', () => handleButtonClick(button, textLabel, icon, expandButton));
@@ -153,11 +158,11 @@
     chrome.runtime.sendMessage({ action: 'executeQuestCode' }, (response) => {
       if (chrome.runtime.lastError) {
         console.error('Discord Auto Quest Error:', chrome.runtime.lastError);
-        updateButtonState(elements, { message: 'Error', bgColor: 'black', textColor: 'white', invertIcons: true });
+        updateButtonState(elements, { message: 'Error', bgColor: 'rgba(255,74,74,0.45)', textColor: '#fff', invertIcons: false });
       } else if (response && response.success) {
-        updateButtonState(elements, { message: 'Code Executed', bgColor: 'black', textColor: 'white', invertIcons: true });
+        updateButtonState(elements, { message: 'Activated', bgColor: 'rgba(74,222,128,0.32)', textColor: '#fff', invertIcons: false });
       } else {
-        updateButtonState(elements, { message: 'Error', bgColor: 'black', textColor: 'white', invertIcons: true });
+        updateButtonState(elements, { message: 'Error', bgColor: 'rgba(255,74,74,0.45)', textColor: '#fff', invertIcons: false });
       }
     });
   }
@@ -177,8 +182,8 @@
 
     setTimeout(() => {
       textLabel.textContent = 'Running Quests';
-      button.style.background = 'white';
-      button.style.color = 'black';
+      button.style.background = 'rgba(255, 255, 255, 0.18)';
+      button.style.color = '#f7f9ff';
       icon.style.filter = '';
       expandButton.style.filter = '';
     }, 2000);
@@ -202,13 +207,13 @@
     panel.appendChild(questListContainer);
 
     const title = document.createElement('h3');
-    title.textContent = 'Discord ID | Auto Quest';
+    title.textContent = 'Nexo Store | Quest Assistant';
     title.style.cssText = 'margin: 0 0 12px 0; font-size: 16px; font-weight: bold; border-top: 1px solid #333; padding-top: 12px;';
     panel.appendChild(title);
 
     const credit = document.createElement('p');
     credit.style.cssText = 'margin: 0; font-size: 14px; color: #ccc;';
-    credit.innerHTML = 'Credits by <a href="https://github.com/nvckai/Discord-Web-Auto-Quest-Extension" target="_blank" style="color: #fff; font-weight: bold; text-decoration: none;">6Together9</a>';
+    credit.innerHTML = 'Made by <strong>@kk5a - nexo store</strong>';
     panel.appendChild(credit);
 
     document.body.appendChild(panel);

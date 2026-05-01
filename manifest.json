@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Discord Web Auto Quest Extension",
+  "name": "Nexo Store Quest Assistant",
   "version": "1.2.6",
-  "description": "Automatically complete Discord quests in the browser without any manual work",
+  "description": "Chrome extension by @kk5a - nexo store to assist Discord quest automation",
   "icons": {
     "16": "assets/icon.png",
     "48": "assets/icon.png",
@@ -21,13 +21,23 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://discord.com/*", "https://canary.discord.com/*"],
-      "js": ["quest-home.js"],
+      "matches": [
+        "https://discord.com/*",
+        "https://canary.discord.com/*"
+      ],
+      "js": [
+        "quest-home.js"
+      ],
       "run_at": "document_idle"
     },
     {
-      "matches": ["https://discord.com/*", "https://canary.discord.com/*"],
-      "js": ["user-agent-override.js"],
+      "matches": [
+        "https://discord.com/*",
+        "https://canary.discord.com/*"
+      ],
+      "js": [
+        "user-agent-override.js"
+      ],
       "run_at": "document_start",
       "world": "MAIN"
     }

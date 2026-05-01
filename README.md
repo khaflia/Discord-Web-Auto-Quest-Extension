@@ -1,12 +1,14 @@
 <img width=100% src="./assets/banner.png" alt="header"/> 
 
-# Discord Web Auto Quest Extension
+# Nexo Store Quest Assistant
 
 <img align="right" src="./assets/icon.png" width=200 alt="Discord Auto Quest Extension logo">
 
 Extension that automatically completes Discord quests. No more manually watching videos or playing games - just click a button and let it run quests one by one automatically and work for all device.
 
-Original Source from [**aamiaa**](https://gist.github.com/aamiaa/204cd9d42013ded9faf646fae7f89fbb)  🌸
+Maintained by **@kk5a - nexo store**.
+
+Based on publicly shared quest automation research and community prototypes.
 
 
 > [!NOTE]

@@ -53,6 +53,12 @@
     return null;
   }
 
+  const QUESTIFY_COMPAT_PROFILE = {
+    name: 'questify-compat',
+    jitterMs: [900, 2200],
+    heartbeatMs: [18000, 24000]
+  };
+
   function sendUpdate(type, data) {
     window.postMessage({
       prefix: 'DISCORD_QUEST_COMPLETER',
@@ -96,10 +102,10 @@
 
           if (isVideo) {
             await processVideoStep(state, stores.api);
-            if (!state.completed) await new Promise(r => setTimeout(r, 1000 + (Math.random() * 500)));
+            if (!state.completed) await new Promise(r => setTimeout(r, QUESTIFY_COMPAT_PROFILE.jitterMs[0] + (Math.random() * (QUESTIFY_COMPAT_PROFILE.jitterMs[1]-QUESTIFY_COMPAT_PROFILE.jitterMs[0]))));
           } else {
             await processHeartbeatStep(state, stores);
-            if (!state.completed) await new Promise(r => setTimeout(r, 20000 + (Math.random() * 2000)));
+            if (!state.completed) await new Promise(r => setTimeout(r, QUESTIFY_COMPAT_PROFILE.heartbeatMs[0] + (Math.random() * (QUESTIFY_COMPAT_PROFILE.heartbeatMs[1]-QUESTIFY_COMPAT_PROFILE.heartbeatMs[0]))));
           }
         }
       }
