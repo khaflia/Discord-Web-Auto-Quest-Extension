@@ -102,10 +102,11 @@
 
     const button = document.createElement('div');
     button.id = 'DiscordQuestButton';
+    button.className = 'questify-extension-button';
     button.style.cssText = STYLES.button;
 
     const icon = document.createElement('img');
-    icon.src = 'https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/66e3d8014ea898f3a4b2156c_Symbol.svg';
+    icon.src = chrome.runtime.getURL('assets/icon.png');
     icon.alt = 'Quest Icon';
     icon.style.cssText = STYLES.icon;
     button.appendChild(icon);
@@ -117,7 +118,7 @@
 
     const expandButton = document.createElement('button');
     const arrowIcon = document.createElement('img');
-    arrowIcon.src = 'https://pic.onlinewebfonts.com/thumbnails/icons_378683.svg';
+    arrowIcon.src = chrome.runtime.getURL('assets/icon.png');
     arrowIcon.style.cssText = 'width: 10px; height: 10px; display: block; pointer-events: none;';
     expandButton.appendChild(arrowIcon);
     expandButton.style.cssText = STYLES.expandButton + ' padding: 4px; display: flex; align-items: center; justify-content: center;';
@@ -194,6 +195,7 @@
 
     const panel = document.createElement('div');
     panel.id = 'DiscordQuestPanel';
+    panel.className = 'questify-extension-panel';
     panel.style.cssText = STYLES.panel;
 
     const questListContainer = document.createElement('div');
