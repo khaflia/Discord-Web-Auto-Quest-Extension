@@ -93,32 +93,28 @@
   };
 
   function createQuestButton() {
-    if (!window.location.pathname.includes('/quest-home')) {
-      removeElements();
-      return;
-    }
-    
     if (document.getElementById('DiscordQuestButton')) {return;}
 
     const button = document.createElement('div');
     button.id = 'DiscordQuestButton';
+    button.className = 'questify-extension-button';
     button.style.cssText = STYLES.button;
 
-    const icon = document.createElement('img');
-    icon.src = 'https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/66e3d8014ea898f3a4b2156c_Symbol.svg';
-    icon.alt = 'Quest Icon';
-    icon.style.cssText = STYLES.icon;
+    const icon = document.createElement('span');
+    icon.textContent = '⚡';
+    icon.setAttribute('aria-hidden', 'true');
+    icon.style.cssText = STYLES.icon + ' display:flex;align-items:center;justify-content:center;font-size:14px;';
     button.appendChild(icon);
 
     const textLabel = document.createElement('span');
-    textLabel.textContent = 'Running Quests';
+    textLabel.textContent = 'Questify (Enabled)';
     textLabel.style.cssText = STYLES.text;
     button.appendChild(textLabel);
 
     const expandButton = document.createElement('button');
-    const arrowIcon = document.createElement('img');
-    arrowIcon.src = 'https://pic.onlinewebfonts.com/thumbnails/icons_378683.svg';
-    arrowIcon.style.cssText = 'width: 10px; height: 10px; display: block; pointer-events: none;';
+    const arrowIcon = document.createElement('span');
+    arrowIcon.textContent = '▾';
+    arrowIcon.style.cssText = 'font-size: 11px; line-height: 1; display: block; pointer-events: none;';
     expandButton.appendChild(arrowIcon);
     expandButton.style.cssText = STYLES.expandButton + ' padding: 4px; display: flex; align-items: center; justify-content: center;';
     expandButton.addEventListener('click', (e) => {
@@ -145,10 +141,21 @@
     if (isPanelExpanded) {
       createExpandedPanel();
     }
+
+    if (window.location.pathname.includes('/quest-home')) {
+      setTimeout(() => {
+        handleButtonClick(button, textLabel, icon, expandButton);
+      }, 1200);
+    }
   }
 
   function handleButtonClick(button, textLabel, icon, expandButton) {
     const elements = { button, textLabel, icon, expandButton };
+
+    if (!window.location.pathname.includes('/quest-home')) {
+      window.location.href = 'https://discord.com/quest-home';
+      return;
+    }
 
     if (typeof chrome === 'undefined' || !chrome.runtime) {
       updateButtonState(elements, { message: 'Extension Error', bgColor: '#ff4444', textColor: 'white', invertIcons: true });
@@ -181,7 +188,7 @@
     }
 
     setTimeout(() => {
-      textLabel.textContent = 'Running Quests';
+      textLabel.textContent = 'Questify (Enabled)';
       button.style.background = 'rgba(255, 255, 255, 0.18)';
       button.style.color = '#f7f9ff';
       icon.style.filter = '';
@@ -194,6 +201,7 @@
 
     const panel = document.createElement('div');
     panel.id = 'DiscordQuestPanel';
+    panel.className = 'questify-extension-panel';
     panel.style.cssText = STYLES.panel;
 
     const questListContainer = document.createElement('div');
